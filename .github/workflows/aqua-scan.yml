@@ -5,7 +5,7 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
-  workflow_dispatch:  # Manual trigger button
+  workflow_dispatch:
 
 jobs:
   scan:
@@ -13,6 +13,19 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install frontend dependencies
+        working-directory: ./frontend
+        run: yarn install
+
+      - name: Install backend dependencies
+        working-directory: ./backend
+        run: yarn install
 
       - name: Install Trivy
         run: |
