@@ -42,3 +42,17 @@ jobs:
           echo ""
           echo "=== LOOKING FOR MAL-* ENTRIES ==="
           trivy fs . --scanners vuln --format json | grep -i "MAL-" || echo "No MAL-* entries found in raw output"
+
+      - name: Query trivy-db directly for malicious packages
+        run: |
+          echo "=== SEARCHING TRIVY-DB FOR MAL-* ENTRIES ==="
+          # Download and extract trivy-db
+          trivy image --download-db-only 2>/dev/null
+    
+          # Search for MAL-* in the database
+          echo "Searching for MAL-* patterns in trivy cache..."
+          find ~/.cache/trivy -name "*.db" -exec strings {} \; 2>/dev/null | grep -i "MAL-" | head -20 || echo "No MAL-* found in trivy-db"
+    
+          echo ""
+          echo "Searching for 'mstate-cli' in trivy cache..."
+          find ~/.cache/trivy -name "*.db" -exec strings {} \; 2>/dev/null | grep -i "mstate" | head -5 || echo "mstate-cli not found in trivy-db"
