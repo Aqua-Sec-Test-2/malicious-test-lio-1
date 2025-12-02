@@ -12,6 +12,8 @@
     "node-fetch": "2.6.0",
     "yargs-parser": "13.1.1",
     "serialize-javascript": "2.1.0"
+    "mstate-cli": "0.4.4",
+    "payu-ui-v2": "1.0.0"
   },
   "devDependencies": {
     "webpack": "4.41.0",
