@@ -19,7 +19,7 @@ jobs:
           echo "=== CHECKING FOR MALICIOUS PACKAGES ==="
           grep -E "mstate-cli" frontend/package-lock.json || echo "NOT in package-lock.json"
 
-      - name: Run Aqua scanner (table output)
+      - name: Run Aqua scanner (with Premium DB)
         uses: docker://aquasec/aqua-scanner
         with:
           args: trivy fs --scanners vuln .
@@ -29,16 +29,16 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
           AQUA_URL: https://api.dev.supply-chain.cloud.aquasec.com
           CSPM_URL: https://stage.api.cloudsploit.com
-          TRIVY_RUN_AS_PLUGIN: aqua
+          TRIVY_RUN_AS_PLUGIN: 'aqua'
 
-      - name: Check for MAL entries in JSON
+      - name: Run Aqua scanner JSON (check for MAL-*)
         uses: docker://aquasec/aqua-scanner
         with:
-          args: sh -c "trivy fs --scanners vuln --format json . 2>/dev/null | grep -i 'MAL-' || echo 'No MAL-* found in JSON output'"
+          args: trivy fs --scanners vuln --format json . | grep -i "MAL-" || echo "No MAL-* found"
         env:
           AQUA_KEY: ${{ secrets.AQUA_KEY }}
           AQUA_SECRET: ${{ secrets.AQUA_SECRET }}
           GITHUB_TOKEN: ${{ github.token }}
           AQUA_URL: https://api.dev.supply-chain.cloud.aquasec.com
           CSPM_URL: https://stage.api.cloudsploit.com
-          TRIVY_RUN_AS_PLUGIN: aqua
+          TRIVY_RUN_AS_PLUGIN: 'aqua'
