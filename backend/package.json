@@ -1,0 +1,24 @@
+{
+  "name": "test-aqua-backend",
+  "version": "1.0.0",
+  "description": "Backend app with vulnerable dependencies for Aqua testing",
+  "main": "server.js",
+  "dependencies": {
+    "express": "4.17.0",
+    "jsonwebtoken": "8.5.0",
+    "mongoose": "5.7.0",
+    "socket.io": "2.3.0",
+    "lodash": "4.17.15",
+    "body-parser": "1.19.0",
+    "cors": "2.8.5",
+    "dotenv": "8.2.0"
+  },
+  "devDependencies": {
+    "nodemon": "1.19.4"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  }
+}
+
