@@ -17,34 +17,28 @@ jobs:
       - name: Verify malicious packages in lockfile
         run: |
           echo "=== CHECKING FOR MALICIOUS PACKAGES ==="
-          echo "In package-lock.json:"
-          grep -E "mstate-cli|payu-ui-v2" frontend/package-lock.json || echo "NOT in package-lock.json"
+          grep -E "mstate-cli" frontend/package-lock.json || echo "NOT in package-lock.json"
 
-      - name: Install Trivy
-        run: |
-          curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin v0.58.0
-
-      - name: Run Trivy OSS (baseline - no Premium DB)
-        run: |
-          echo "=== RAW TRIVY OUTPUT (no Aqua plugin) ==="
-          trivy fs . --scanners vuln --format table || true
-          echo ""
-          echo "=== LOOKING FOR MAL-* ENTRIES (OSS) ==="
-          trivy fs . --scanners vuln --format json | grep -i "MAL-" || echo "No MAL-* entries in OSS scan"
-
-      - name: Run Aqua Scanner (with trivy-server Premium DB)
-        run: |
-          echo "=== AQUA PLUGIN OUTPUT (with Premium DB) ==="
-          AQUA_KEY=${{ secrets.AQUA_KEY }} \
-          AQUA_SECRET=${{ secrets.AQUA_SECRET }} \
-          TRIVY_RUN_AS_PLUGIN=aqua \
-          trivy fs . --scanners vuln --format table || true
-          echo ""
-          echo "=== LOOKING FOR MAL-* ENTRIES (Premium) ==="
-          AQUA_KEY=${{ secrets.AQUA_KEY }} \
-          AQUA_SECRET=${{ secrets.AQUA_SECRET }} \
-          TRIVY_RUN_AS_PLUGIN=aqua \
-          trivy fs . --scanners vuln --format json | grep -i "MAL-" || echo "No MAL-* entries found"
+      - name: Run Aqua scanner (with Premium DB)
+        uses: docker://aquasec/aqua-scanner
+        with:
+          args: trivy fs --scanners vuln .
         env:
           AQUA_KEY: ${{ secrets.AQUA_KEY }}
           AQUA_SECRET: ${{ secrets.AQUA_SECRET }}
+          GITHUB_TOKEN: ${{ github.token }}
+          AQUA_URL: https://api.dev.supply-chain.cloud.aquasec.com
+          CSPM_URL: https://stage.api.cloudsploit.com
+          TRIVY_RUN_AS_PLUGIN: 'aqua'
+
+      - name: Run Aqua scanner JSON (check for MAL-*)
+        uses: docker://aquasec/aqua-scanner
+        with:
+          args: trivy fs --scanners vuln --format json . | grep -i "MAL-" || echo "No MAL-* found"
+        env:
+          AQUA_KEY: ${{ secrets.AQUA_KEY }}
+          AQUA_SECRET: ${{ secrets.AQUA_SECRET }}
+          GITHUB_TOKEN: ${{ github.token }}
+          AQUA_URL: https://api.dev.supply-chain.cloud.aquasec.com
+          CSPM_URL: https://stage.api.cloudsploit.com
+          TRIVY_RUN_AS_PLUGIN: 'aqua'
