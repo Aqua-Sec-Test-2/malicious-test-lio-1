@@ -14,9 +14,26 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Verify malicious packages are in lockfile
+        run: |
+          echo "=== CHECKING LOCKFILE FOR MALICIOUS PACKAGES ==="
+          echo "Looking for mstate-cli..."
+          grep -A3 "mstate-cli" frontend/yarn.lock || echo "NOT FOUND!"
+          echo ""
+          echo "Looking for payu-ui-v2..."
+          grep -A3 "payu-ui-v2" frontend/yarn.lock || echo "NOT FOUND!"
+
       - name: Install Trivy
         run: |
           curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin v0.58.0
+
+      - name: List all packages Trivy detects
+        run: |
+          echo "=== ALL PACKAGES TRIVY SEES IN FRONTEND ==="
+          trivy fs frontend/ --scanners vuln --format json | jq '.Results[].Packages[]?.Name' 2>/dev/null | sort -u | head -50
+          echo ""
+          echo "=== CHECKING IF TRIVY SEES OUR MALICIOUS PACKAGES ==="
+          trivy fs frontend/ --scanners vuln --format json | jq '.Results[].Packages[]?.Name' 2>/dev/null | grep -E "mstate|payu" || echo "Trivy did NOT detect mstate-cli or payu-ui-v2 as packages!"
 
       - name: Run Trivy (RAW - no Aqua plugin)
         run: |
