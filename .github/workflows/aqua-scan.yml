@@ -22,7 +22,13 @@ jobs:
       - name: Run Aqua scanner (with Premium DB)
         uses: docker://aquasec/aqua-scanner
         with:
-          args: trivy --debug fs --scanners vuln --format json --list-all-pkgs --include-dev-deps .
+          args: trivy --debug fs --scanners vuln --format json --list-all-pkgs --include-dev-deps -o trivy-results.json .
+
+      - name: Upload Trivy results
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-results
+          path: trivy-results.json
         env:
           AQUA_KEY: ${{ secrets.AQUA_KEY }}
           AQUA_SECRET: ${{ secrets.AQUA_SECRET }}
