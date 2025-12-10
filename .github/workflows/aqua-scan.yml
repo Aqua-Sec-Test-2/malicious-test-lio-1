@@ -40,7 +40,7 @@ jobs:
       - name: Run Aqua scanner JSON (check for MAL-*)
         uses: docker://aquasec/aqua-scanner:dev
         with:
-          args: trivy fs --scanners vuln --format json . | grep -i "MAL-" || echo "No MAL-* found"
+          args: trivy fs --scanners vuln --format json . 
         env:
           AQUA_KEY: ${{ secrets.AQUA_KEY }}
           AQUA_SECRET: ${{ secrets.AQUA_SECRET }}
