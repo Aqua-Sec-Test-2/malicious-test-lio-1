@@ -20,7 +20,7 @@ jobs:
           grep -E "mstate-cli" frontend/package-lock.json || echo "NOT in package-lock.json"
 
       - name: Run Aqua scanner (with Premium DB)
-        uses: docker://aquasec/aqua-scanner
+        uses: docker://aquasec/aqua-scanner:dev
         with:
           args: trivy --debug fs --scanners vuln --format json --list-all-pkgs -o trivy-results.json .
 
@@ -38,7 +38,7 @@ jobs:
           TRIVY_RUN_AS_PLUGIN: 'aqua'
 
       - name: Run Aqua scanner JSON (check for MAL-*)
-        uses: docker://aquasec/aqua-scanner
+        uses: docker://aquasec/aqua-scanner:dev
         with:
           args: trivy fs --scanners vuln --format json . | grep -i "MAL-" || echo "No MAL-* found"
         env:
