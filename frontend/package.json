@@ -11,16 +11,12 @@
     "axios": "0.21.1",
     "node-fetch": "2.6.0",
     "yargs-parser": "13.1.1",
-    "serialize-javascript": "2.1.0",
-    "payu-ui-v2": "1.0.0",
-    "noblox.js-proxy": "4.6.5"
+    "serialize-javascript": "2.1.0"
   },
   "devDependencies": {
     "webpack": "4.41.0",
     "webpack-cli": "3.3.10",
-    "serialize-javascript": "2.1.0",
-    "mstate-cli": "0.4.7",
-    "lemaaa": "1.0.0"
+    "serialize-javascript": "2.1.0"
   },
   "scripts": {
     "start": "echo 'Frontend app'",
