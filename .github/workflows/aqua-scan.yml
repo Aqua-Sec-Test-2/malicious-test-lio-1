@@ -1,4 +1,4 @@
-name: Aqua Security Scan
+name: "Test 4: dev-deps OFF + skip-block OFF"
 
 on:
   push:
@@ -14,33 +14,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Verify malicious packages in lockfile
-        run: |
-          echo "=== CHECKING FOR MALICIOUS PACKAGES ==="
-          grep -E "mstate-cli" frontend/package-lock.json || echo "NOT in package-lock.json"
-
-      - name: Run Aqua scanner (with Premium DB)
+      - name: Run Aqua scanner
         uses: docker://aquasec/aqua-scanner:dev
         with:
-          args: trivy --debug fs --scanners vuln --format json --list-all-pkgs -o trivy-results.json .
-
-      - name: Upload Trivy results
-        uses: actions/upload-artifact@v4
-        with:
-          name: trivy-results
-          path: trivy-results.json
-        env:
-          AQUA_KEY: ${{ secrets.AQUA_KEY }}
-          AQUA_SECRET: ${{ secrets.AQUA_SECRET }}
-          GITHUB_TOKEN: ${{ github.token }}
-          AQUA_URL: https://api.dev.supply-chain.cloud.aquasec.com
-          CSPM_URL: https://stage.api.cloudsploit.com
-          TRIVY_RUN_AS_PLUGIN: 'aqua'
-
-      - name: Run Aqua scanner JSON (check for MAL-*)
-        uses: docker://aquasec/aqua-scanner:dev
-        with:
-          args: trivy fs --scanners vuln --format json . 
+          args: trivy fs --scanners vuln --skip-result-upload .
         env:
           AQUA_KEY: ${{ secrets.AQUA_KEY }}
           AQUA_SECRET: ${{ secrets.AQUA_SECRET }}
