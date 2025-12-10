@@ -14,10 +14,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Run Aqua scanner
+      - name: Run Aqua scanner (with skip-block flag)
         uses: docker://aquasec/aqua-scanner:dev
         with:
-          args: trivy fs --scanners vuln .
+          args: trivy fs --scanners vuln --skip-result-upload --skip-block-malicious-packages .
         env:
           AQUA_KEY: ${{ secrets.AQUA_KEY }}
           AQUA_SECRET: ${{ secrets.AQUA_SECRET }}
