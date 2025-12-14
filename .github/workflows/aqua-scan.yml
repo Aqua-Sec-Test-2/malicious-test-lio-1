@@ -10,12 +10,14 @@ on:
 jobs:
   scan:
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Run Aqua scanner (with skip-block flag)
-        uses: docker://aquasec/aqua-scanner:dev
+        uses: docker://aquasec/aqua-scanner:malicious-test
         with:
           args: trivy fs --scanners vuln --skip-result-upload --skip-block-malicious-packages .
         env:
