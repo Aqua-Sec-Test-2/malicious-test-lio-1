@@ -1,4 +1,4 @@
-name: Aqua Security Scan
+name: "Test 5: Full Flow (no skip-result-upload)"
 
 on:
   push:
@@ -16,10 +16,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Run Aqua scanner (with skip-block flag)
+      - name: Run Aqua scanner
         uses: docker://aquasec/aqua-scanner:malicious-test
         with:
-          args: trivy fs --scanners vuln --skip-result-upload --skip-block-malicious-packages .
+          args: trivy fs --scanners vuln .
         env:
           AQUA_KEY: ${{ secrets.AQUA_KEY }}
           AQUA_SECRET: ${{ secrets.AQUA_SECRET }}
