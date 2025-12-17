@@ -1,4 +1,4 @@
-name: "Test 5: Full Flow (no skip-result-upload)"
+name: "Test 3: dev-deps ON + skip-block OFF"
 
 on:
   push:
@@ -15,9 +15,11 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Run Aqua scanner
+
         uses: docker://aquasec/aqua-scanner:malicious-test
         with:
-          args: trivy fs --scanners vuln .
+          args: trivy fs --scanners vuln  --include-dev-deps .
+
         env:
           AQUA_KEY: ${{ secrets.AQUA_KEY }}
           AQUA_SECRET: ${{ secrets.AQUA_SECRET }}
