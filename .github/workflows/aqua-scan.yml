@@ -15,9 +15,11 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Run Aqua scanner
-        uses: docker://aquasec/aqua-scanner:dev
+
+        uses: docker://aquasec/aqua-scanner:malicious-test
         with:
-          args: trivy fs --scanners vuln --skip-result-upload --include-dev-deps .
+          args: trivy fs --scanners vuln  --include-dev-deps .
+
         env:
           AQUA_KEY: ${{ secrets.AQUA_KEY }}
           AQUA_SECRET: ${{ secrets.AQUA_SECRET }}
