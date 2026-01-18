@@ -27,3 +27,4 @@ jobs:
           AQUA_URL: https://dev-aqua.codesec.aquasec.com
           CSPM_URL: https://cloud-dev.aquasec.com
           TRIVY_RUN_AS_PLUGIN: 'aqua'
+          TRIVY_SERVER_URL: https://trivy-server.dev.supply-chain.cloud.aquasec.com
