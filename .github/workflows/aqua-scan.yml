@@ -1,4 +1,4 @@
-name: "Test 5: Full Flow (no skip-result-upload)"
+name: "Test 3: dev-deps ON + skip-block OFF"
 
 on:
   push:
